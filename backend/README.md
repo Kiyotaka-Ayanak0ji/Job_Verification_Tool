@@ -1,7 +1,7 @@
 # TrustHire — Backend (Express gateway)
 
 ## Deployed Link
-[www.google.com](Link)
+- (Link)[www.google.com]
 ---
 
 Self-hostable Node/Express API. The sole gateway the React frontend communicates
