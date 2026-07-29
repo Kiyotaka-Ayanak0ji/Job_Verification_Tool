@@ -147,8 +147,7 @@ Flask ML service (backend/ml-service/)          Verification coalescer
 - **ML service** (`backend/ml-service/`) — Flask app. Resolves user input
   (URL or company name) via Firecrawl, enriches with ~85 Normal or ~140 Deep
   Think features across 10 feature groups (A–J), runs 8 sub-scorers, and
-  returns a trust score + band + per-parameter breakdown. See
-  [`MODEL_FEATURES.md`](./MODEL_FEATURES.md) for the full feature taxonomy.
+  returns a trust score + band + per-parameter breakdown.
 
 ---
 
