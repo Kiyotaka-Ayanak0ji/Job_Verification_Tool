@@ -1,11 +1,3 @@
-"""TrustHire ML service — Flask app.
-
-Adds spec §2/§4 features:
-  - GET  /models              list retained model versions (max 2)
-  - POST /verify-company      supports model=, mode=fresh|noise, noise=bool
-  - POST /bulk-csv            admin CSV upload (pandas) -> parsed rows
-  - Automated retention & promotion gate (in pipeline.save / registry.prune)
-"""
 from __future__ import annotations
 import io, json, os, threading
 from datetime import datetime, timezone
