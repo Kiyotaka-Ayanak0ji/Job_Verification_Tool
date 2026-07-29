@@ -1,0 +1,28 @@
+import { Router } from "express";
+import authRoutes from "./authRoutes.js";
+import verifyRoutes from "./verifyRoutes.js";
+import reportsRoutes from "./reportsRoutes.js";
+import groupsRoutes from "./groupsRoutes.js";
+import usageRoutes from "./usageRoutes.js";
+import adminRoutes from "./adminRoutes.js";
+import firecrawlRoutes from "./firecrawlRoutes.js";
+import billingRoutes from "./billingRoutes.js";
+import feedbackRoutes from "./feedbackRoutes.js";
+import mlAdminRoutes from "./mlAdminRoutes.js";
+import modelsRoutes from "./modelsRoutes.js";
+import { mlHealth } from "../services/mlClient.js";
+
+const router = Router();
+router.get("/health", async (_req, res) => res.json({ ok: true, ml: await mlHealth() }));
+router.use("/auth", authRoutes);
+router.use("/verify", verifyRoutes);
+router.use("/reports", reportsRoutes);
+router.use("/groups", groupsRoutes);
+router.use("/usage", usageRoutes);
+router.use("/admin", adminRoutes);
+router.use("/firecrawl", firecrawlRoutes);
+router.use("/billing", billingRoutes);
+router.use("/feedback", feedbackRoutes);
+router.use("/admin/ml", mlAdminRoutes);
+router.use("/models", modelsRoutes);
+export default router;
