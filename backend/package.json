@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon --watch src src/index.js",
     "start": "node src/index.js",
+    "build": "NODE_ENV=production && npm install && npm run migrate:up && npm run dev", 
     "migrate:up": "migrate-mongo up -f migrate-mongo-config.cjs",
     "migrate:down": "migrate-mongo down -f migrate-mongo-config.cjs",
     "migrate:status": "migrate-mongo status -f migrate-mongo-config.cjs"
