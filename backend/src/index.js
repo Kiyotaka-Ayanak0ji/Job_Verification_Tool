@@ -21,13 +21,12 @@ async function main() {
   const allowedOrigins = env.CORS_ORIGIN.split(",").map((s) => s.trim()).filter(Boolean);
   app.use(
     cors({
-      // origin(origin, cb) {
-      //   // allow same-origin / curl / server-to-server (no Origin header)
-      //   if (!origin) return cb(null, true);
-      //   if (allowedOrigins.includes("*") || allowedOrigins.includes(origin)) return cb(null, true);
-      //   return cb(new Error(`origin_not_allowed: ${origin}`));
-      // },
-      orign: true,
+      origin(origin, cb) {
+        // allow same-origin / curl / server-to-server (no Origin header)
+        if (!origin) return cb(null, true);
+        if (allowedOrigins.includes("*") || allowedOrigins.includes(origin)) return cb(null, true);
+        return cb(new Error(`origin_not_allowed: ${origin}`));
+      },
       credentials: true,
     }),
   );
