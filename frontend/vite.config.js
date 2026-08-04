@@ -17,22 +17,19 @@ export default defineConfig({
         display: "standalone",
         start_url: "/",
         icons: [
-          { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+          { 
+            src: "/icon-192.png", 
+            sizes: "192x192", 
+            type: "image/png" 
+          },
+          { 
+            src: "/icon-512.png", 
+            sizes: "512x512", 
+            type: "image/png" 
+          },
         ],
       },
     }),
   ],
   resolve: { alias: { "@": path.resolve(process.cwd(), "src") } },
-  server: {
-    port: 5173,
-    // Dev proxy so the frontend can call `/api/*` without a VITE_API_URL
-    // env var when the Express backend runs on :8000.
-    proxy: {
-      "/api": {
-        target: process.env.VITE_PROXY_TARGET || "http://localhost:8000",
-        changeOrigin: true,
-      },
-    },
-  },
 });
