@@ -19,6 +19,11 @@ export function setupApiInterceptors(store) {
 // Intercept requests to attach auth token
 api.interceptors.request.use((cfg) => {
   const token = _store?.getState().auth.token;
+  
+  //Testing 
+  console.log("Token: ", token);
+  console.log("Request: ", cfg.url);
+
   if (token) cfg.headers.Authorization = `Bearer ${token}`;
   return cfg;
 });
