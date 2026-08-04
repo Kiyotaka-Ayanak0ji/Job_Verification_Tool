@@ -24,7 +24,7 @@ async function main() {
       origin(origin, cb) {
         // allow same-origin / curl / server-to-server (no Origin header)
         if (!origin) return cb(null, true);
-        if (allowedOrigins.includes("*") || allowedOrigins.includes(origin)) return cb(null, true);
+        if (allowedOrigins.includes("https://job-verification-backend.onrender.com") || allowedOrigins.includes(origin)) return cb(null, true);
         return cb(new Error(`origin_not_allowed: ${origin}`));
       },
       credentials: true,
