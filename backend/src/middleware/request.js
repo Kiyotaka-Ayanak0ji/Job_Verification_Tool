@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import compression from "compression";
-import { crypto } from "crypto";
+import { createHash } from "crypto";
 
 /**
  * Request ID middleware - adds a unique request ID to each request for tracing.
@@ -180,6 +180,6 @@ export function healthCheck() {
  * Generate ETag from content
  */
 function generateETag(content) {
-  const hash = crypto.createHash("md5").update(content).digest("hex");
+  const hash = createHash("md5").update(content).digest("hex");
   return `"${hash}"`;
 }
