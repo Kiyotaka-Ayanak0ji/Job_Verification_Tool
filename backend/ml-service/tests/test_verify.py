@@ -11,7 +11,7 @@ def test_resolve_company_name_offline():
 def test_enrich_flags_scam_language():
     seed = {"company": "Foo", "description": "Send upfront fee to secure your seat", "source_url": ""}
     scraped = enrich(seed)
-    assert scraped["complaints"]["scam_reports"] >= 1
+    assert scraped["complaints"]["count"] >= 1
 
 
 def test_mapper_round_trip():

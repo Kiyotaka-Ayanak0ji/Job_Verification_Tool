@@ -43,4 +43,4 @@ def test_seed_train_and_score(tmp_path: Path):
     assert clean["trustScore"] > scam["trustScore"]
     assert clean["band"] in {"high", "likely"}
     assert scam["band"] in {"caution", "risk"}
-    assert len(clean["parameters"]) == 8
+    assert len(clean["parameters"]) == 9

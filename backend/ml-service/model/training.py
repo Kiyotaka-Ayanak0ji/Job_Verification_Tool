@@ -41,7 +41,7 @@ def train_seed(models_root: str | Path, seed_path: str | Path, version: str = "v
 
     # sanity metrics on synthetic distribution
     rng = np.random.default_rng(7)
-    X = rng.integers(0, 101, size=(500, 8)).astype(float)
+    X = rng.integers(0, 101, size=(500, 9)).astype(float)
     y = ((X * SPEC_WEIGHTS).sum(axis=1) >= 70).astype(int)
     preds = np.array([meta.predict_score(dict(zip(SUB_KEYS, row))) >= 70 for row in X], dtype=int)
     metrics = evaluate(y, preds)
