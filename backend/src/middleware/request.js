@@ -97,15 +97,20 @@ export function requestTimeout(timeoutMs = 30000) {
 
 /**
  * Response time header middleware
+ * Uses 'headers' event which fires right before headers are sent
  */
 export function responseTime() {
   return (req, res, next) => {
     const start = process.hrtime.bigint();
-    res.on("finish", () => {
+
+    // Use 'headers' event - fires right before headers are implicitily sent
+    // This is the correct place to set response headers that depend on timing
+    res.on("headers", () => {
       const end = process.hrtime.bigint();
       const ms = Number(end - start) / 1_000_000;
-      res.set("X-Response-Time", `${ms.toFixed(2)}ms`);
+      res.setHeader("X-Response-Time", `${ms.toFixed(2)}ms`);
     });
+
     next();
   };
 }
