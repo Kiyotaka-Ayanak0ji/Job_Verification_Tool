@@ -38,7 +38,7 @@ class MetaScorer:
         spec-weighted sum; refits from real feedback replace this.
         """
         rng = np.random.default_rng(42)
-        X = rng.integers(0, 101, size=(2000, 8)).astype(float)
+        X = rng.integers(0, 101, size=(2000, 9)).astype(float)
         weighted = (X * SPEC_WEIGHTS).sum(axis=1)
         y = (weighted >= 70).astype(int)
         clf = LogisticRegression(max_iter=1000, C=1.0).fit(X, y)
