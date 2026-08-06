@@ -179,7 +179,7 @@ export function healthCheck() {
  * Generate ETag from content
  */
 function generateETag(content) {
-  const crypto = require("crypto");
+  import crypto from "crypto";
   const hash = crypto.createHash("md5").update(content).digest("hex");
   return `"${hash}"`;
 }
