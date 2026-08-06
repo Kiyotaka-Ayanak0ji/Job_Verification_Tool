@@ -34,19 +34,53 @@ export const markNotificationsRead = createAsyncThunk("mlAdmin/notificationsRead
 
 const slice = createSlice({
   name: "mlAdmin",
-  initialState: { settings: null, runs: [], pending: [], bulk: [], notifications: [], loading: false },
+  initialState: { settings: null, runs: [], pending: [], bulk: [], notifications: [], loading: false, error: null },
   reducers: {},
   extraReducers: (b) => {
-    b.addCase(fetchMlSettings.fulfilled, (s, { payload }) => { s.settings = payload; });
-    b.addCase(saveMlSettings.fulfilled, (s, { payload }) => { s.settings = payload; });
-    b.addCase(fetchRuns.fulfilled, (s, { payload }) => { s.runs = payload; });
-    b.addCase(fetchPendingFeedback.fulfilled, (s, { payload }) => { s.pending = payload; });
+    const handlePending = (s) => { s.loading = true; s.error = null; };
+    const handleRejected = (s, a) => { s.loading = false; s.error = a.error.message; };
+
+    b.addCase(fetchMlSettings.pending, handlePending);
+    b.addCase(fetchMlSettings.fulfilled, (s, { payload }) => { s.loading = false; s.settings = payload; });
+    b.addCase(fetchMlSettings.rejected, handleRejected);
+
+    b.addCase(saveMlSettings.pending, handlePending);
+    b.addCase(saveMlSettings.fulfilled, (s, { payload }) => { s.loading = false; s.settings = payload; });
+    b.addCase(saveMlSettings.rejected, handleRejected);
+
+    b.addCase(fetchRuns.pending, handlePending);
+    b.addCase(fetchRuns.fulfilled, (s, { payload }) => { s.loading = false; s.runs = payload; });
+    b.addCase(fetchRuns.rejected, handleRejected);
+
+    b.addCase(runRetrain.pending, handlePending);
+    b.addCase(runRetrain.fulfilled, (s, { payload }) => { s.loading = false; });
+    b.addCase(runRetrain.rejected, handleRejected);
+
+    b.addCase(fetchPendingFeedback.pending, handlePending);
+    b.addCase(fetchPendingFeedback.fulfilled, (s, { payload }) => { s.loading = false; s.pending = payload; });
+    b.addCase(fetchPendingFeedback.rejected, handleRejected);
+
+    b.addCase(toggleFeedbackInclude.pending, handlePending);
     b.addCase(toggleFeedbackInclude.fulfilled, (s, { payload }) => {
-      s.pending = s.pending.map((f) => (f._id === payload._id ? { ...f, includedForTraining: payload.includedForTraining } : f));
+      s.loading = false; s.pending = s.pending.map((f) => (f._id === payload._id ? { ...f, includedForTraining: payload.includedForTraining } : f));
     });
-    b.addCase(fetchBulkJobs.fulfilled, (s, { payload }) => { s.bulk = payload; });
-    b.addCase(startBulkJob.fulfilled, (s, { payload }) => { s.bulk = [payload, ...s.bulk]; });
-    b.addCase(fetchNotifications.fulfilled, (s, { payload }) => { s.notifications = payload; });
+    b.addCase(toggleFeedbackInclude.rejected, handleRejected);
+
+    b.addCase(startBulkJob.pending, handlePending);
+    b.addCase(startBulkJob.fulfilled, (s, { payload }) => { s.loading = false; s.bulk = [payload, ...s.bulk]; });
+    b.addCase(startBulkJob.rejected, handleRejected);
+
+    b.addCase(fetchBulkJobs.pending, handlePending);
+    b.addCase(fetchBulkJobs.fulfilled, (s, { payload }) => { s.loading = false; s.bulk = payload; });
+    b.addCase(fetchBulkJobs.rejected, handleRejected);
+
+    b.addCase(fetchNotifications.pending, handlePending);
+    b.addCase(fetchNotifications.fulfilled, (s, { payload }) => { s.loading = false; s.notifications = payload; });
+    b.addCase(fetchNotifications.rejected, handleRejected);
+
+    b.addCase(markNotificationsRead.pending, handlePending);
+    b.addCase(markNotificationsRead.fulfilled, (s) => { s.loading = false; });
+    b.addCase(markNotificationsRead.rejected, handleRejected);
   },
 });
 export default slice.reducer;

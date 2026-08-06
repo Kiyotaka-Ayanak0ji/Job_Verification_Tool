@@ -7,7 +7,6 @@ import { ArrowRight, Loader2, ChevronDown, ShieldCheck, Scale, Globe2 } from "lu
 import PageHead from "../components/PageHead.jsx";
 import { verifyCompany } from "../store/reportsSlice.js";
 import { api } from "../api/client.js";
-import { SkeletonText, SkeletonAvatar, SkeletonButton } from "../components/Skeleton.jsx";
 
 export default function Home() {
   const [q, setQ] = useState("");

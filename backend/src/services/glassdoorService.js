@@ -92,7 +92,7 @@ export function extractReviewSentiment(reviewText) {
     'micromanaged', 'favoritism', 'discrimination', 'harassment'
   ];
 
-  const textLower = rewardText.toLowerCase();
+  const textLower = reviewText.toLowerCase();
   let positiveScore = 0;
   let negativeScore = 0;
 

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 
-export const SkeletonText = () => (
+export const SkeletonText = ({ className = "" } = {}) => (
   <motion.div
-    className="h-4 w-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-[shimmer_2s_infinite]"
+    className={`h-4 w-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer ${className}`}
     initial={{ opacity: 0 }}
     animate={{ opacity: [0, 1, 1] }}
     transition={{ duration: 0.5 }}
@@ -11,7 +11,7 @@ export const SkeletonText = () => (
 
 export const SkeletonAvatar = () => (
   <motion.div
-    className="h-10 w-10 rounded-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-[shimmer_2s_infinite]"
+    className="h-10 w-10 rounded-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer"
     initial={{ opacity: 0 }}
     animate={{ opacity: [0, 1, 1] }}
     transition={{ duration: 0.5 }}
@@ -28,9 +28,9 @@ export const SkeletonAvatarText = () => (
   </div>
 );
 
-export const SkeletonButton = ({ size = "p-2 px-4" } = {}) => (
+export const SkeletonButton = ({ size = "p-2 px-4", className = "" } = {}) => (
   <motion.button
-    className={`${size} rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-[shimmer_2s_infinite]`}
+    className={`${size} rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer ${className}`}
     disabled
     initial={{ opacity: 0 }}
     animate={{ opacity: [0, 1, 1] }}
@@ -40,7 +40,7 @@ export const SkeletonButton = ({ size = "p-2 px-4" } = {}) => (
 
 export const SkeletonInput = ({ className = "" } = {}) => (
   <motion.input
-    className={`block w-full rounded border bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-[shimmer_2s_infinite] ${className}`}
+    className={`block w-full rounded border bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer ${className}`}
     readOnly
     initial={{ opacity: 0 }}
     animate={{ opacity: [0, 1, 1] }}
@@ -50,7 +50,7 @@ export const SkeletonInput = ({ className = "" } = {}) => (
 
 export const SkeletonCard = ({ children, className = "" } = {}) => (
   <motion.div
-    className={`p-6 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-[shimmer_2s_infinite] ${className}`}
+    className={`p-6 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] animate-shimmer ${className}`}
     initial={{ opacity: 0 }}
     animate={{ opacity: [0, 1, 1] }}
     transition={{ duration: 0.5 }}
@@ -178,17 +178,3 @@ export const SkeletonProfileSection = () => (
     </motion.div>
   </motion.div>
 );
-
-// Add keyframes for shimmer effect
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-
-  .animate-[shimmer_2s_infinite] {
-    animation: shimmer 2s infinite;
-  }
-`;
-document.head.appendChild(style);

@@ -4,7 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import PageHead from "../components/PageHead.jsx";
 import { fetchReports } from "../store/reportsSlice.js";
 import { BAND_COLOR, BAND_LABEL } from "../lib/bands.js";
-import { SkeletonText, SkeletonAvatar } from "../components/Skeleton.jsx";
+import { SkeletonText } from "../components/Skeleton.jsx";
 
 export default function Results() {
   const [sp] = useSearchParams();

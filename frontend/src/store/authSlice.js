@@ -26,6 +26,9 @@ export const changePassword = createAsyncThunk("auth/changePassword", async (pay
   const { data } = await api.post("/auth/change-password", payload);
   return data;
 });
+export const logoutUser = createAsyncThunk("auth/logout", async () => {
+  await api.post("/auth/logout");
+});
 
 const persist = (state) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -61,10 +64,23 @@ const slice = createSlice({
     b.addCase(signup.fulfilled, auth);
     b.addCase(fetchMe.fulfilled, (s, { payload }) => { s.user = payload; persist(s); });
     b.addCase(updateProfile.fulfilled, (s, { payload }) => { s.user = payload; persist(s); });
+    b.addCase(changePassword.fulfilled, (s) => { s.error = null; });
     for (const t of [login, signup]) {
       b.addCase(t.pending, (s) => { s.status = "loading"; s.error = null; });
       b.addCase(t.rejected, (s, a) => { s.status = "error"; s.error = a.error.message; });
     }
+    for (const t of [fetchMe, updateProfile, changePassword]) {
+      b.addCase(t.pending, (s) => { s.status = "loading"; s.error = null; });
+      b.addCase(t.rejected, (s, a) => { s.status = "error"; s.error = a.error.message; });
+    }
+    // logoutUser pending/rejected
+    b.addCase(logoutUser.pending, (s) => { s.status = "loading"; s.error = null; });
+    b.addCase(logoutUser.fulfilled, (s) => {
+      s.status = "idle"; s.error = null;
+      s.token = null; s.refreshToken = null; s.user = null;
+      localStorage.removeItem(STORAGE_KEY);
+    });
+    b.addCase(logoutUser.rejected, (s, a) => { s.status = "error"; s.error = a.error.message; });
   },
 });
 

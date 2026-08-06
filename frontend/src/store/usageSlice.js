@@ -7,10 +7,12 @@ export const fetchUsage = createAsyncThunk("usage/me", async () => {
 
 const slice = createSlice({
   name: "usage",
-  initialState: { data: null },
+  initialState: { data: null, loading: false, error: null },
   reducers: {},
   extraReducers: (b) => {
-    b.addCase(fetchUsage.fulfilled, (s, { payload }) => { s.data = payload; });
+    b.addCase(fetchUsage.pending, (s) => { s.loading = true; s.error = null; });
+    b.addCase(fetchUsage.fulfilled, (s, { payload }) => { s.loading = false; s.data = payload; });
+    b.addCase(fetchUsage.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
   },
 });
 export default slice.reducer;

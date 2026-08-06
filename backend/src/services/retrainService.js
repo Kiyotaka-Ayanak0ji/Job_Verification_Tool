@@ -5,6 +5,7 @@ import { ModelMetric } from "../models/ModelMetric.js";
 import { Verification } from "../models/Verification.js";
 import { RetrainRun } from "../models/RetrainRun.js";
 import { getActiveSetting } from "../models/ModelSetting.js";
+import { feedbackToTrainingRows } from "../controllers/feedbackController.js";
 
 // Build the payload the Flask /retrain endpoint expects (see ml-service/app.py).
 async function buildTrainingRows({ since, feedbackIds } = {}) {
@@ -19,23 +20,19 @@ async function buildTrainingRows({ since, feedbackIds } = {}) {
     .limit(2000)
     .populate("verificationId", "parameters modelVersion")
     .lean();
-  return rows.map((r) => {
-    const params = r.verificationId?.parameters || [];
-    const subs = {};
-    for (const p of params) if (p?.key) subs[p.key] = p.score;
-    return {
-      feedback_id: String(r._id),
-      verdict: r.accurate ? "accurate" : "inaccurate",
-      label: r.accurate ? 1 : 0,
-      sub_scores: subs,
-      job_id: String(r.jobId),
-      user_id: String(r.userId),
-      model_version: r.verificationId?.modelVersion,
-      user_rating: r.userRating || null,
-      user_review: r.userReview || null,
-      comment: r.comment || null,
-    };
-  }).filter((r) => Object.keys(r.sub_scores).length > 0);
+
+  // Convert to ML service format using shared transformation
+  const mlRows = feedbackToTrainingRows(rows);
+
+  // Also return original rows for tracking
+  return rows.map((r, i) => ({
+    ...mlRows[i],
+    feedback_id: String(r._id),
+    sub_scores: mlRows[i].sub_scores,
+    jd_text: mlRows[i].jd_text,
+    jd_label: mlRows[i].jd_label,
+    model_version: mlRows[i].model_version,
+  })).filter((r) => Object.keys(r.sub_scores).length > 0);
 }
 
 export async function triggerRetrain({ since = null, bump = "patch", feedbackIds = null, triggeredBy = null } = {}) {
@@ -109,3 +106,6 @@ async function bandDistribution() {
   for (const { _id, count } of agg) if (_id && out[_id] !== undefined) out[_id] = count;
   return out;
 }
+
+// Export the transformation function for external use
+export { feedbackToTrainingRows };

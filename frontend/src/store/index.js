@@ -7,9 +7,10 @@ import usage from "./usageSlice.js";
 import admin from "./adminSlice.js";
 import billing from "./billingSlice.js";
 import mlAdmin from "./mlAdminSlice.js";
+import feedback from "./feedbackSlice.js";
 
 export const store = configureStore({
-  reducer: { auth, reports, groups, usage, admin, billing, mlAdmin },
+  reducer: { auth, reports, groups, usage, admin, billing, mlAdmin, feedback },
 });
 
 setupApiInterceptors(store);

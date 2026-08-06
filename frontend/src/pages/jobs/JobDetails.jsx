@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Download, ArrowLeft, ThumbsUp, ThumbsDown, ExternalLink } from "lucide-react";
 import PageHead from "../../components/PageHead.jsx";
 import { getReport } from "../../store/reportsSlice.js";
+import { submitFeedback } from "../../store/feedbackSlice.js";
 import { BAND_COLOR, BAND_LABEL } from "../../lib/bands.js";
 import { exportReportPdf } from "../../lib/pdf.js";
 import { api } from "../../api/client.js";
@@ -44,11 +45,11 @@ export default function JobDetails() {
 
   async function sendFeedback(accurate) {
     try {
-      await api.post("/feedback", {
+      await dispatch(submitFeedback({
         verificationId: verification?._id,
         accurate,
         comment: comment.trim() || undefined,
-      });
+      }));
       setFeedbackSent(accurate ? "accurate" : "inaccurate");
       toast.success("Thanks — feedback recorded");
     } catch (err) {

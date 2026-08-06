@@ -1,4 +1,4 @@
-"""Meta scorer: LogisticRegression over 8 sub-scores → P(authentic) → 0-100.
+"""Meta scorer: LogisticRegression over 9 sub-scores → P(authentic) → 0-100.
 
 Initialised to the PDF spec weights; refit from feedback via training.py.
 """
@@ -6,8 +6,8 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.isotonic import IsotonicRegression
 
-SUB_KEYS = ["legal", "gstin", "reputation", "domain", "jd", "consistency", "financial", "complaints"]
-SPEC_WEIGHTS = np.array([0.20, 0.15, 0.20, 0.10, 0.15, 0.10, 0.05, 0.05])
+SUB_KEYS = ["legal", "gstin", "reputation", "domain", "jd", "consistency", "financial", "complaints", "recruiter"]
+SPEC_WEIGHTS = np.array([0.15, 0.10, 0.15, 0.10, 0.15, 0.10, 0.05, 0.10, 0.10])
 
 # Runtime-tunable weights (admin can override via /settings). Kept as a mutable
 # array so pipeline scoring picks up the latest values without reload.

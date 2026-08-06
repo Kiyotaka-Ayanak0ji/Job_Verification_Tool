@@ -27,7 +27,6 @@ async function processBulkJob(jobId) {
   job.startedAt = new Date();
   await job.save();
 
-  const queue = [...job.urls.entries()];
   let cursor = 0;
 
   async function worker() {

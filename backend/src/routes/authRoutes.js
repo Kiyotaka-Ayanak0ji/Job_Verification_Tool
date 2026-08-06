@@ -7,6 +7,7 @@ const r = Router();
 r.post("/signup", authLimiter, c.signup);
 r.post("/login", authLimiter, c.login);
 r.post("/refresh", c.refresh);
+r.post("/logout", requireAuth, c.logout);
 r.get("/me", requireAuth, c.me);
 r.patch("/profile", requireAuth, c.updateProfile);
 r.post("/change-password", requireAuth, c.changePassword);

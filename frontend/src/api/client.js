@@ -19,11 +19,6 @@ export function setupApiInterceptors(store) {
 // Intercept requests to attach auth token
 api.interceptors.request.use((cfg) => {
   const token = _store?.getState().auth.token;
-  
-  //Testing 
-  console.log("Token: ", token);
-  console.log("Request: ", cfg.url);
-
   if (token) cfg.headers.Authorization = `Bearer ${token}`;
   return cfg;
 });
@@ -87,13 +82,17 @@ export const apiMethods = {
   getBulkJob: (id) => api.get(`/admin/ml/bulk/${id}`),
 
   // Feedback management
-  toggleFeedbackInclude: (id, include) => api.post(`/admin/feedback/${id}/include`, { include }),
+  toggleFeedbackInclude: (id, include) => api.post(`/admin/ml/feedback/${id}/include`, { include }),
   fetchFeedbackByVerificationIds: (verificationIds) =>
-    api.post("/admin/feedback/by-ids", { verificationIds }),
+    api.post("/admin/ml/feedback/by-ids", { verificationIds }),
 
   // Notifications
-  getNotifications: () => api.get("/admin/notifications"),
-  markNotificationsRead: () => api.post("/admin/notifications/read"),
+  getNotifications: () => api.get("/admin/ml/notifications"),
+  markNotificationsRead: () => api.post("/admin/ml/notifications/read"),
+
+  // Firecrawl
+  firecrawlScrape: (url, formats) => api.post("/firecrawl/scrape", { url, formats }),
+  firecrawlSearch: (query, limit) => api.post("/firecrawl/search", { query, limit }),
 };
 
 // For backward compatibility, also export the api object directly

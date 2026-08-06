@@ -1,21 +1,32 @@
 def score(payload, features, scraped, ctx=None):
     c = (scraped or {}).get("complaints") or {}
-    
-    # Deep think logic uses a broader set of flags
-    if "cybercrime_complaint_flag" in c:
-        if c.get("cybercrime_complaint_flag") or c.get("regulatory_adverse_signal"):
-            return {"score": 5, "status": "High Risk", "evidence": "Deep Think: Severe regulatory or cybercrime alerts found."}
-        count = sum([
-            int(c.get("complaint_count", 0)),
-            int(c.get("fraud_allegation_count", 0)),
-            int(c.get("recruitment_fee_allegation_count", 0)),
-            int(c.get("salary_non_payment_allegation_count", 0))
-        ])
-    else:
-        count = int(c.get("count", 0) or 0)
+
+    # Use new enrichment fields if available
+    cybercrime_flag = c.get("cybercrime_complaint_flag", False)
+    regulatory_flag = c.get("regulatory_adverse_signal", False)
+    fraud_count = int(c.get("fraud_allegation_count", 0) or 0)
+    total_count = int(c.get("count", 0) or 0)
+    complaint_hits = c.get("complaint_hits", []) or []
+
+    # Severe flags trigger immediate low score
+    if cybercrime_flag or regulatory_flag:
+        evidence_parts = []
+        if cybercrime_flag:
+            evidence_parts.append("cybercrime/police complaint flagged")
+        if regulatory_flag:
+            evidence_parts.append("regulatory adverse signal (SEBI/MCA/RBI/ED)")
+        evidence = "Deep Think: Severe " + "; ".join(evidence_parts) + "."
+        return {"score": 5, "status": "High Risk", "evidence": evidence}
+
+    # Count total complaint signals
+    count = total_count + fraud_count
 
     if count == 0:
         return {"score": 94, "status": "None flagged", "evidence": "0 prior TrustHire flags."}
+
     s = max(5, 90 - count * 12)
-    return {"score": s, "status": f"{count} flag(s)",
-            "evidence": f"{count} prior user complaint(s) on this employer."}
+    status = f"{count} flag(s)"
+    evidence = f"{count} prior complaint signal(s) on this employer."
+    if complaint_hits:
+        evidence += f" Latest: {complaint_hits[0].get('snippet', '')[:100]}..."
+    return {"score": s, "status": status, "evidence": evidence}

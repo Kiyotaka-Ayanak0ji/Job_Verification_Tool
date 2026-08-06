@@ -94,3 +94,9 @@ export const unlinkGoogle = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(req.auth.sub, { $unset: { googleId: 1 } }, { new: true });
   res.json({ user: user.toPublic() });
 });
+
+export const logout = asyncHandler(async (req, res) => {
+  // Client handles token removal; this endpoint exists for API completeness
+  // and potential future server-side token blacklisting
+  res.json({ ok: true });
+});

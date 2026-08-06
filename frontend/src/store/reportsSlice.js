@@ -25,17 +25,36 @@ const slice = createSlice({
   initialState: { items: [], current: null, loading: false, error: null },
   reducers: {},
   extraReducers: (b) => {
-    b.addCase(fetchReports.pending, (s) => { s.loading = true; });
+    // fetchReports
+    b.addCase(fetchReports.pending, (s) => { s.loading = true; s.error = null; });
     b.addCase(fetchReports.fulfilled, (s, { payload }) => { s.loading = false; s.items = payload.reports || payload; });
     b.addCase(fetchReports.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
-    b.addCase(verifyCompany.fulfilled, (s, { payload }) => { s.items.unshift(payload.report); s.current = payload; });
-    b.addCase(getReport.fulfilled, (s, { payload }) => { s.current = payload; });
+
+    // verifyCompany
+    b.addCase(verifyCompany.pending, (s) => { s.loading = true; s.error = null; });
+    b.addCase(verifyCompany.fulfilled, (s, { payload }) => { s.loading = false; s.items.unshift(payload.report); s.current = payload; });
+    b.addCase(verifyCompany.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
+
+    // patchReport
+    b.addCase(patchReport.pending, (s) => { s.loading = true; s.error = null; });
     b.addCase(patchReport.fulfilled, (s, { payload }) => {
+      s.loading = false;
       s.items = s.items.map((r) => (r._id === payload._id ? payload : r));
     });
+    b.addCase(patchReport.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
+
+    // removeReport
+    b.addCase(removeReport.pending, (s) => { s.loading = true; s.error = null; });
     b.addCase(removeReport.fulfilled, (s, { payload }) => {
+      s.loading = false;
       s.items = s.items.filter((r) => r._id !== payload);
     });
+    b.addCase(removeReport.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
+
+    // getReport
+    b.addCase(getReport.pending, (s) => { s.loading = true; s.error = null; });
+    b.addCase(getReport.fulfilled, (s, { payload }) => { s.loading = false; s.current = payload; });
+    b.addCase(getReport.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
   },
 });
 export default slice.reducer;

@@ -58,9 +58,38 @@ export const listAllFeedback = asyncHandler(async (req, res) => {
   });
 });
 
-// Marker for the cron job so the ML service can be called without ping-ponging
-// unhelpful metadata over the wire.
+/**
+ * Transform Feedback documents into ML service training row format.
+ * This is the single source of truth for how feedback becomes training data.
+ *
+ * @param {Array} rows - Array of Feedback documents (from DB, with populated verificationId)
+ * @returns {Array} Array of training rows compatible with Flask /retrain endpoint
+ */
 export function feedbackToTrainingRows(rows) {
+  return rows.map((r) => {
+    const params = r.verificationId?.parameters || [];
+    const subs = {};
+    for (const p of params) if (p?.key) subs[p.key] = p.score;
+
+    return {
+      feedback_id: String(r._id),
+      verdict: r.accurate ? "accurate" : "inaccurate",
+      label: r.accurate ? 1 : 0,
+      sub_scores: subs,
+      jd_text: r.jdText || r.comment || null, // Use comment as JD text if available
+      jd_label: r.jdLabel ?? null,
+      user_id: String(r.userId),
+      job_id: String(r.jobId),
+      model_version: r.verificationId?.modelVersion,
+      user_rating: r.userRating || null,
+      user_review: r.userReview || null,
+      comment: r.comment || null,
+    };
+  }).filter((r) => Object.keys(r.sub_scores).length > 0);
+}
+
+// Backward-compatible alias
+export function feedbackToTrainingRowsLegacy(rows) {
   return rows.map((r) => ({
     verdict: r.accurate ? "accurate" : "inaccurate",
     label: r.accurate ? 1 : 0,

@@ -84,7 +84,7 @@ export function analyzeSentiment(text) {
   let negativeCount = 0;
 
   positiveWords.forEach(word => {
-    const matches = textLRere.matchAll(new RegExp(`\\\\b${word}\\\\b`, 'g'));
+    const matches = textLower.matchAll(new RegExp(`\\b${word}\\b`, 'g'));
     for (const match of matches) {
       positiveCount++;
     }
